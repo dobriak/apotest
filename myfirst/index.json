@@ -6,16 +6,17 @@
   "details": {
     "steps": [
       {
-        "title": "Step 1",
+        "title": "Hello world",
         "text": "step1.md"
       },
       {
-        "title": "Step 2",
+        "title": "Calculate Foo",
         "text": "step2.md"
       },
       {
-        "title": "Step 3",
-        "text": "step3.md"
+        "title": "Plug into Bar",
+        "text": "step3.md",
+        "courseData": "step3.sh"
       }
     ],
     "intro": {
