@@ -1,10 +1,8 @@
-# Calculate Foo
-
 Let's try to pull up an UI:
 
 * Install nginx
 
-`sudo apt install -y nginx`{{execute}}
+`sudo apt update; sudo apt install -y nginx`{{execute}}
 
 * Open its index.html
 
