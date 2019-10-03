@@ -7,3 +7,7 @@ This is what to expect from this course:
 * Plug into Bar
 * ...
 * Profit!
+
+In order to use this tutorial, you will need to create an account with Aporeto. This will allow you to utilze Aporeto's control plane UI. Click on the link below:
+
+[Aporeto Console Registration](https://console.aporeto.com/register/)

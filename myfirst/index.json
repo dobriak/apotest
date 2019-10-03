@@ -11,7 +11,8 @@
       },
       {
         "title": "Calculate Foo",
-        "text": "step2.md"
+        "text": "step2.md",
+        "courseData": "step2.sh"
       },
       {
         "title": "Plug into Bar",

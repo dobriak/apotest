@@ -2,8 +2,8 @@ Let's try to pull up an UI:
 
 * Install nginx
 
-`sudo apt update; sudo apt install -y nginx`{{execute}}
+`sudo apt install -y nginx`{{execute}}
 
 * Open its index.html
 
-Render port 80: https://[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com/
+View `index.html` of the newly installed nginx: https://[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com/
