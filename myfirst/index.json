@@ -28,8 +28,7 @@
       ]
     },
     "intro": {
-      "text": "intro.md",
-      "code": "aposetup.sh setup"
+      "text": "intro.md"
     },
     "finish": {
       "text": "finish.md"
