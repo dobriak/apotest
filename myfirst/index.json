@@ -28,12 +28,12 @@
     "assets": {
       "client": [
         {
-          "file": "*.sh",
+          "file": "setup.sh",
           "target": "/opt/",
           "chmod": "+x"
         },
         {
-          "file": "*.conf",
+          "file": "aporeto.conf",
           "target": "/opt/"
         }
       ]
