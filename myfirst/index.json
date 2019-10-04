@@ -1,6 +1,6 @@
 {
-  "title": "My first scenario",
-  "description": "Testing things with katacoda",
+  "title": "Protecting a linux host",
+  "description": "Enable communication between containers.",
   "difficulty": "Beginner",
   "time": "10",
   "details": {
