@@ -1,9 +1,18 @@
-Let's try to pull up an UI:
+Let's now install enforcerd.
 
-* Install nginx
+We need to add add Aporeto's GPG key to verify the package signature:
 
-`sudo apt install -y nginx`{{execute}}
+`curl -sSL http://download.aporeto.com/aporeto-packages.gpg | apt-key add -`{{execute}}
 
-* Open its index.html
+We also need to add Aporeto Packages Repository to our apt sources:
 
-View `index.html` of the newly installed nginx: https://[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com/
+`echo "deb https://repo.aporeto.com/ubuntu/$(lsb_release -cs) aporeto main" > /etc/apt/sources.list.d/aporeto.list`{{execute}}
+
+And, finally, let's install and start enforcerd:
+
+`apt update && apt -y install enforcerd
+systemctl start enforcerd`{{execute}}
+
+You can check enforcerd is running with the following command:
+
+`systemctl status enforcerd`{{execute}}

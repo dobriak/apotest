@@ -6,22 +6,21 @@
   "details": {
     "steps": [
       {
-        "title": "Hello world",
+        "title": "Get App Credentials",
         "text": "step1.md"
       },
       {
-        "title": "Calculate Foo",
-        "text": "step2.md",
-        "courseData": "step2.sh"
+        "title": "Install Enforcerd",
+        "text": "step2.md"
       },
       {
-        "title": "Plug into Bar",
-        "text": "step3.md",
-        "courseData": "step3.sh"
+        "title": "Verify Enforcerd Operation",
+        "text": "step3.md"
       }
     ],
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "courseData": "setup.sh setup"
     },
     "finish": {
       "text": "finish.md"
