@@ -21,19 +21,15 @@
     "assets": {
       "host01": [
         {
-          "file": "setup.sh",
+          "file": "aposetup.sh",
           "target": "/opt/",
           "chmod": "+x"
-        },
-        {
-          "file": "aporeto.conf",
-          "target": "/opt/"
         }
       ]
     },
     "intro": {
       "text": "intro.md",
-      "courseData": "/opt/setup.sh setup"
+      "code": "aposetup.sh setup"
     },
     "finish": {
       "text": "finish.md"
