@@ -14,8 +14,11 @@ Let's start with creating a Network Access Policy in Aporeto:
 
 The network policy describes an allowed connectivity between 2 processing units named `centos` and `nginx`. In our case they are going to be 2 docker containers running on our host:
 
-`docker run -d --rm --name nginx nginx
-docker run -it -d --rm --name centos centos`{{execute}}
+* Nginx
+`docker run -d --rm --name nginx nginx`{{execute}}
+
+* Centos
+`docker run -it -d --rm --name centos centos`{{execute}}
 
 For the verification part of this exercise, we will attempt to connect from the `centos` to the `nginx` processing unit.
 We will do that by attaching to `centos` and issuing a curl command pointed to the IP Address under which `nginx` is running.

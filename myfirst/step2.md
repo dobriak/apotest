@@ -10,8 +10,7 @@ We also need to add Aporeto Packages Repository to our apt sources:
 
 And, finally, let's install and start enforcerd:
 
-`apt update && apt -y install enforcerd
-systemctl start enforcerd`{{execute}}
+`apt update && apt -y install enforcerd && systemctl start enforcerd`{{execute}}
 
 You can check enforcerd is running with the following command:
 
