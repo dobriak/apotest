@@ -1,5 +1,5 @@
 #!/bin/bash
-source aporeto.conf
+source /opt/aporeto.conf
 
 APORETO_SESSION_ID="$(uuidgen)"
 

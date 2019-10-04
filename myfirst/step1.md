@@ -4,7 +4,7 @@ First things first, let's have you log in with your aporeto account. We will aut
 
 Click on the the little arrow right next to the script name to get started:
 
-`setup.sh linux`{{execute}}
+`/opt/setup.sh linux`{{execute}}
 
 ### App credentials
 are JSON files that contain a negotiated x509 certificate used for authentication as well as more information about the control plane.

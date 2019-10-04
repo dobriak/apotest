@@ -20,10 +20,23 @@
     ],
     "intro": {
       "text": "intro.md",
-      "courseData": "intro.sh"
+      "courseData": "/opt/setup.sh setup"
     },
     "finish": {
       "text": "finish.md"
+    },
+    "assets": {
+      "client": [
+        {
+          "file": "*.sh",
+          "target": "/opt/",
+          "chmod": "+x"
+        },
+        {
+          "file": "*.conf",
+          "target": "/opt/"
+        }
+      ]
     }
   },
   "environment": {
