@@ -90,20 +90,19 @@ EOF
 }
 
 disable_docker_proxy () {
+  echo "> Disabling docker's userland proxy"
   jq '. + {"userland-proxy": false}' /etc/docker/daemon.json > /etc/docker/daemon.json.new
   mv /etc/docker/daemon.json.new /etc/docker/daemon.json
   systemctl restart docker
 }
 
 # Main
-cmd=${1?"Usage: $0 setup,linux,k8s"}
+cmd=${1?"Usage: $0 linux,k8s"}
 
 case "${cmd}" in
-  "setup")
+  "linux")
     install_apoctl
     disable_docker_proxy
-    ;;
-  "linux")
     authenticate
     create_namespace
     write_config

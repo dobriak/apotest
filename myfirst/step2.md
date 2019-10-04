@@ -14,4 +14,4 @@ And, finally, let's install and start enforcerd:
 
 You can check enforcerd is running with the following command:
 
-`systemctl status enforcerd`{{execute}}
+`systemctl is-active enforcerd`{{execute}}

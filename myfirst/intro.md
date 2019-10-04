@@ -12,8 +12,4 @@ In order to use this tutorial, you will need to create an account with Aporeto. 
 
 [Aporeto Console Registration](https://console.aporeto.com/register/)
 
-Once you have registered, please run the following command to set up your environment:
-
-`/opt/aposetup.sh setup`{{execute}}
-
 On with the course!
