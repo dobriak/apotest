@@ -26,7 +26,7 @@
       "text": "finish.md"
     },
     "assets": {
-      "client": [
+      "host01": [
         {
           "file": "setup.sh",
           "target": "/opt/",
