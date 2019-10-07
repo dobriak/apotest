@@ -1,5 +1,5 @@
 #!/bin/bash
-APORETO_RELEASE="release-3.9.1"
+APORETO_RELEASE="release-3.11.15"
 DEFAULT_CLAD_URL="https://console.aporeto.com"
 DEFAULT_API_URL="https://api.console.aporeto.com"
 DEFAULT_HELM_REPO_URL="https://charts.aporeto.com/clients"
@@ -89,6 +89,19 @@ alias nslink="echo \"\$DEFAULT_CLAD_URL/?namespace=\$APOCTL_NAMESPACE\""
 EOF
 }
 
+obtain_admin_appcred () {
+  if [ -z "$APORETO_ACCOUNT" ]; then
+    echo "Please authenticate first."
+    exit 1
+  fi
+  echo "Getting namespace editor app credential"
+  [ -d ~/.apoctl ] || mkdir ~/.apoctl
+  apoctl appcred create administrator-credentials --role @auth:role=namespace.editor -n "/${APORETO_ACCOUNT}/${APORETO_NS_PREFIX}/${APORETO_SESSION_ID}" > ~/.apoctl/creds.json
+  chmod 400 ~/.apoctl/creds.json
+  echo "creds: ~/.apoctl/creds.json" > ~/.apoctl/default.yaml
+  apoctl auth verify
+}
+
 disable_docker_proxy () {
   echo "> Disabling docker's userland proxy"
   jq '. + {"userland-proxy": false}' /etc/docker/daemon.json > /etc/docker/daemon.json.new
@@ -109,9 +122,9 @@ case "${cmd}" in
     ;;
   "k8s")
     install_apoctl
-    disable_docker_proxy
     authenticate
     create_namespace
+    obtain_admin_appcred
     write_config
     ;;
   "*")

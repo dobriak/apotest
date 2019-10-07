@@ -1,5 +1,5 @@
 #!/bin/bash
-APORETO_RELEASE="release-3.9.1"
+APORETO_RELEASE="release-3.11.15"
 DEFAULT_CLAD_URL="https://console.aporeto.com"
 DEFAULT_API_URL="https://api.console.aporeto.com"
 DEFAULT_HELM_REPO_URL="https://charts.aporeto.com/clients"

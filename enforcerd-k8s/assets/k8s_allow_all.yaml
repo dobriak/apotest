@@ -1,0 +1,76 @@
+label: install-default-allow-all-policies
+data:
+  automations:
+  - name: install-default-allow-all-policies
+    description: Installs default allow all fallback policies for every child namespace that gets created to mimic Kubernetes default behavior.
+    trigger: Event
+    events:
+      namespace:
+      - create
+    entitlements:
+      externalnetwork:
+      - create
+      networkaccesspolicy:
+      - create
+    condition: |-
+      function when(api, params) {
+          return { continue: true, payload: { namespace: params.eventPayload.entity } };
+      }
+    actions:
+    - |-
+      function then(api, params, payload) {
+          api.Create('externalnetwork', {
+              name: 'external-tcp-all',
+              description: 'Created by an automation on namespace creation. It is safe to be deleted, if not required.',
+              metadata: ['@ext:name=tcpall'],
+              entries: ['0.0.0.0/0'],
+              ports: ['1:65535'],
+              protocols: ['tcp'],
+              propagate: true,
+          }, payload.namespace.name);
+          api.Create('externalnetwork', {
+              name: 'external-udp-all',
+              description: 'Created by an automation on namespace creation. It is safe to be deleted, if not required.',
+              metadata: ['@ext:name=udpall'],
+              entries: ['0.0.0.0/0'],
+              ports: ['1:65535'],
+              protocols: ['udp'],
+              propagate: true,
+          }, payload.namespace.name);
+          api.Create('networkaccesspolicy', {
+              name: 'default-fallback-ingress-allow-all',
+              description: 'Created by an automation on namespace creation. It is safe to be deleted, if not required.',
+              metadata: ['@netpol=default-fallback'],
+              propagate: true,
+              fallback: true,
+              logsEnabled: true,
+              observationEnabled: true,
+              observedTrafficAction: 'Apply',
+              action: 'Allow',
+              applyPolicyMode: 'IncomingTraffic',
+              subject: [
+                  ['$identity=processingunit'],
+                  ['@ext:name=tcpall'],
+                  ['@ext:name=udpall'],
+              ],
+              object: [['$namespace='+payload.namespace.name]],
+          }, payload.namespace.name);
+          api.Create('networkaccesspolicy', {
+              name: 'default-fallback-egress-allow-all',
+              description: 'Created by an automation on namespace creation. It is safe to be deleted, if not required',
+              metadata: ['@netpol=default-fallback'],
+              propagate: true,
+              fallback: true,
+              logsEnabled: true,
+              observationEnabled: true,
+              observedTrafficAction: 'Apply',
+              action: 'Allow',
+              applyPolicyMode: 'OutgoingTraffic',
+              subject: [['$namespace='+payload.namespace.name]],
+              object: [
+                  ['$identity=processingunit'],
+                  ['@ext:name=tcpall'],
+                  ['@ext:name=udpall'],
+              ],
+          }, payload.namespace.name);
+      }
