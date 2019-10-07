@@ -108,8 +108,11 @@ case "${cmd}" in
     write_config
     ;;
   "k8s")
-    echo "K8s content coming very soon, stay tuned!"
-    exit 0
+    install_apoctl
+    disable_docker_proxy
+    authenticate
+    create_namespace
+    write_config
     ;;
   "*")
     echo "Unknown command: ${cmd}"
