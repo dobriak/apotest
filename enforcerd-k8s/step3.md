@@ -22,4 +22,4 @@ To check on the progress, issue the following command and look for either `Runni
 
   - Verify the enforcer deployment:
 
-`apoctl api list enforcers --namespace $APOCTL_NAMESPACE -c ID -c name -cnamespace -c operationalStatus`{{execute}}
+`apoctl api list enforcers --namespace $APOCTL_NAMESPACE -c ID -c name -c namespace -c operationalStatus`{{execute}}
