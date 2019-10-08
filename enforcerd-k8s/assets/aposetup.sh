@@ -85,7 +85,6 @@ export APOCTL_TOKEN=$APOCTL_TOKEN
 export APOCTL_API=$DEFAULT_API_URL
 
 alias nslink="echo \"\$DEFAULT_CLAD_URL/?namespace=\$APOCTL_NAMESPACE\""
-[ -f /opt/post-setup.sh ] && source /opt/post-setup.sh
 EOF
 }
 
@@ -106,26 +105,59 @@ disable_docker_proxy () {
   echo "> Disabling docker's userland proxy"
   jq '. + {"userland-proxy": false}' /etc/docker/daemon.json > /etc/docker/daemon.json.new
   mv /etc/docker/daemon.json.new /etc/docker/daemon.json
+  echo "> Restarting docker"
   systemctl restart docker
 }
 
+prepare_k8s () {
+  if [ ! -f ~/.aporeto ]; then
+    echo "Run '/opt/aposetup.sh setup' first"
+    exit 1
+  fi
+  source ~/.aporeto
+  echo "> Creating tiller account and initializing helm"
+  kubectl apply -f /opt/k8s_tiller.yaml
+  helm init --service-account tiller --upgrade
+
+  echo "> Adding Aporeto's helm repository"
+  helm repo add aporeto https://charts.aporeto.com/releases/${APORETO_RELEASE}/clients
+
+  echo "> Creating enforcer profile in Aporeto that will ignore loopback traffic, allowing sidecar containers to communicate with each other"
+  apoctl api import -f /opt/k8s_enforcer_profile.yaml
+
+  echo "> Create an automation in Aporeto that will allow all traffic at first"
+  apoctl api import -f /opt/k8s_allow_all.yaml
+
+  echo "> Creating Kubernetes namespaces and credentials for Aporeto's tooling"
+  kubectl create namespace aporeto-operator
+  kubectl create namespace aporeto
+  apoctl appcred create enforcerd --type k8s --role "@auth:role=enforcer" | kubectl apply -f - -n aporeto
+  apoctl appcred create aporeto-operator --type k8s --role "@auth:role=aporeto-operator" | kubectl apply -f - -n aporeto-operator
+
+  echo "> Making sure the credentials are stored in Kubernetes"
+  kubectl -n aporeto-operator get secrets | grep Opaque
+  kubectl -n aporeto get secrets | grep Opaque
+}
+
 # Main
-cmd=${1?"Usage: $0 linux,k8s"}
+cmd=${1?"Usage: $0 setup,linux,k8s,dproxy"}
 
 case "${cmd}" in
-  "linux")
-    install_apoctl
-    disable_docker_proxy
-    authenticate
-    create_namespace
-    write_config
-    ;;
-  "k8s")
+  "setup")
     install_apoctl
     authenticate
     create_namespace
     obtain_admin_appcred
     write_config
+    ;;
+  "linux")
+    echo "linux stuff here"
+    ;;
+  "k8s")
+    prepare_k8s
+    ;;
+  "dproxy")
+    disable_docker_proxy
     ;;
   "*")
     echo "Unknown command: ${cmd}"

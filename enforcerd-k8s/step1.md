@@ -6,4 +6,4 @@ Let's have you log in with your aporeto account. We will automatically create a 
 
 Click on the the little arrow right next to the script name to get started:
 
-`/opt/aposetup.sh k8s && source .aporeto`{{execute}}
+`/opt/aposetup.sh setup && source .aporeto`{{execute}}
