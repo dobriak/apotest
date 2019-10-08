@@ -6,19 +6,19 @@
   "details": {
     "steps": [
       {
-        "title": "Step 1",
+        "title": "Set up apoctl",
         "text": "step1.md"
       },
       {
-        "title": "Step 2",
+        "title": "Set up kubernetes",
         "text": "step2.md"
       },
       {
-        "title": "Step 3",
+        "title": "Create policies",
         "text": "step3.md"
       },
       {
-        "title": "Step 4",
+        "title": "Test protection",
         "text": "step4.md"
       }
     ],
@@ -46,6 +46,6 @@
     "uilayout": "terminal"
   },
   "backend": {
-    "imageid": "kubernetes"
+    "imageid": "kubernetes-cluster-running"
   }
 }
