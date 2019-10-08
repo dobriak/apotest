@@ -39,6 +39,13 @@
           "file": "k8s_*",
           "target": "/opt"
         }
+      ],
+      "host02": [
+        {
+          "file": "aposetup.sh",
+          "target": "/opt",
+          "chmod": "+x"
+        }
       ]
     }
   },
