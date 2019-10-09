@@ -85,31 +85,93 @@ export APOCTL_TOKEN=$APOCTL_TOKEN
 export APOCTL_API=$DEFAULT_API_URL
 
 alias nslink="echo \"\$DEFAULT_CLAD_URL/?namespace=\$APOCTL_NAMESPACE\""
-[ -f /opt/post-setup.sh ] && source /opt/post-setup.sh
 EOF
+}
+
+obtain_admin_appcred () {
+  if [ -z "$APORETO_ACCOUNT" ]; then
+    echo "Please authenticate first."
+    exit 1
+  fi
+  echo "Getting namespace editor app credential"
+  [ -d ~/.apoctl ] || mkdir ~/.apoctl
+  apoctl appcred create administrator-credentials --role @auth:role=namespace.editor -n "/${APORETO_ACCOUNT}/${APORETO_NS_PREFIX}/${APORETO_SESSION_ID}" > ~/.apoctl/creds.json
+  chmod 400 ~/.apoctl/creds.json
+  echo "creds: ~/.apoctl/creds.json" > ~/.apoctl/default.yaml
+  apoctl auth verify
 }
 
 disable_docker_proxy () {
   echo "> Disabling docker's userland proxy"
   jq '. + {"userland-proxy": false}' /etc/docker/daemon.json > /etc/docker/daemon.json.new
   mv /etc/docker/daemon.json.new /etc/docker/daemon.json
+  echo "> Restarting docker"
   systemctl restart docker
 }
 
+prepare_k8s () {
+  if [ ! -f ~/.aporeto ]; then
+    echo "Run '/opt/aposetup.sh setup' first"
+    exit 1
+  fi
+  source ~/.aporeto
+  echo "> Creating tiller account and initializing helm"
+  kubectl apply -f /opt/k8s_tiller.yaml
+  sleep 60s
+  helm init --service-account tiller --upgrade
+
+  echo "> Adding Aporeto's helm repository"
+  helm repo add aporeto https://charts.aporeto.com/releases/${APORETO_RELEASE}/clients
+
+  echo "> Creating enforcer profile in Aporeto that will ignore loopback traffic, allowing sidecar containers to communicate with each other"
+  apoctl api import -f /opt/k8s_enforcer_profile.yaml
+
+  echo "> Create an automation in Aporeto that will allow all traffic at first"
+  apoctl api import -f /opt/k8s_allow_all.yaml
+
+  echo "> Creating Kubernetes namespaces and credentials for Aporeto's tooling"
+  kubectl create namespace aporeto-operator
+  kubectl create namespace aporeto
+  apoctl appcred create enforcerd --type k8s --role "@auth:role=enforcer" | kubectl apply -f - -n aporeto
+  apoctl appcred create aporeto-operator --type k8s --role "@auth:role=aporeto-operator" | kubectl apply -f - -n aporeto-operator
+
+  echo "> Making sure the credentials are stored in Kubernetes"
+  kubectl -n aporeto-operator get secrets | grep Opaque
+  kubectl -n aporeto get secrets | grep Opaque
+  sleep 60s
+
+  echo "> Deploy the Aporeto Operator"
+  helm install aporeto/aporeto-crds --name aporeto-crds
+  sleep 60s
+  helm install aporeto/aporeto-operator --name aporeto-operator --namespace aporeto-operator
+  kubectl get pods -n aporeto-operator
+  sleep 60s
+  echo "> Install the enforcer and verify it"
+  helm install aporeto/enforcerd --name enforcerd --namespace aporeto
+  sleep 60s
+  kubectl get pods --all-namespaces | grep aporeto
+  apoctl api list enforcers --namespace $APOCTL_NAMESPACE -c ID -c name -c namespace -c operationalStatus
+}
+
 # Main
-cmd=${1?"Usage: $0 linux,k8s"}
+cmd=${1?"Usage: $0 setup,linux,k8s,dproxy"}
 
 case "${cmd}" in
-  "linux")
+  "setup")
     install_apoctl
-    disable_docker_proxy
     authenticate
     create_namespace
+    obtain_admin_appcred
     write_config
     ;;
+  "linux")
+    echo "linux stuff here"
+    ;;
   "k8s")
-    echo "K8s content coming very soon, stay tuned!"
-    exit 0
+    prepare_k8s
+    ;;
+  "dproxy")
+    disable_docker_proxy
     ;;
   "*")
     echo "Unknown command: ${cmd}"
