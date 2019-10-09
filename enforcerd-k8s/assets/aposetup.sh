@@ -117,6 +117,7 @@ prepare_k8s () {
   source ~/.aporeto
   echo "> Creating tiller account and initializing helm"
   kubectl apply -f /opt/k8s_tiller.yaml
+  sleep 60s
   helm init --service-account tiller --upgrade
 
   echo "> Adding Aporeto's helm repository"
