@@ -138,12 +138,14 @@ prepare_k8s () {
   echo "> Making sure the credentials are stored in Kubernetes"
   kubectl -n aporeto-operator get secrets | grep Opaque
   kubectl -n aporeto get secrets | grep Opaque
+  sleep 60s
 
   echo "> Deploy the Aporeto Operator"
   helm install aporeto/aporeto-crds --name aporeto-crds
+  sleep 60s
   helm install aporeto/aporeto-operator --name aporeto-operator --namespace aporeto-operator
   kubectl get pods -n aporeto-operator
-
+  sleep 60s
   echo "> Install the enforcer and verify it"
   helm install aporeto/enforcerd --name enforcerd --namespace aporeto
   sleep 60s
