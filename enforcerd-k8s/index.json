@@ -53,7 +53,7 @@
     "terminals": [
       {"name": "master", "target": "host01"},
       {"name": "worker", "target": "host02"}
-    ]
+    ],
     "uilayout": "terminal"
   },
   "backend": {
