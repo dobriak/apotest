@@ -117,6 +117,7 @@ prepare_k8s () {
   source ~/.aporeto
   echo "> Creating tiller account and initializing helm"
   kubectl apply -f /opt/k8s_tiller.yaml
+  echo "Waiting for tiller pod..."
   sleep 60s
   helm init --service-account tiller --upgrade
 
@@ -145,9 +146,11 @@ prepare_k8s () {
   sleep 60s
   helm install aporeto/aporeto-operator --name aporeto-operator --namespace aporeto-operator
   kubectl get pods -n aporeto-operator
+  echo "Waiting for the Aporeto Operator..."
   sleep 60s
   echo "> Install the enforcer and verify it"
   helm install aporeto/enforcerd --name enforcerd --namespace aporeto
+  echo "Waiting for the enforcer DaemonSet..."
   sleep 60s
   kubectl get pods --all-namespaces | grep aporeto
   apoctl api list enforcers --namespace $APOCTL_NAMESPACE -c ID -c name -c namespace -c operationalStatus

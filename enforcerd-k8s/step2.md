@@ -43,3 +43,29 @@ _TODO: Explain what we are configuring here_
   - Let's make sure the Kubernetes secrets were created:
 
 `kubectl -n aporeto-operator get secrets && kubectl -n aporeto get secrets`
+
+### Deploy the Aporeto Operator
+
+* Install Aporeto's Custom Resource Definitions
+
+`helm install aporeto/aporeto-crds --name aporeto-crds`
+
+* And, finally, the Aporeto Operator for Kubernetes:
+
+`helm install aporeto/aporeto-operator --name aporeto-operator --namespace aporeto-operator`
+
+  - Verify the installation:
+`kubectl get pods -n aporeto-operator`
+
+### Install the enforcer
+
+Next command might take a few minutes to complete:
+`helm install aporeto/enforcerd --name enforcerd --namespace aporeto`
+
+To check on the progress, issue the following command and look for either `Running` or `Completed` status:
+
+`kubectl get pods --all-namespaces | grep aporeto`
+
+  - Verify the enforcer deployment:
+
+`apoctl api list enforcers --namespace $APOCTL_NAMESPACE -c ID -c name -c namespace -c operationalStatus`
