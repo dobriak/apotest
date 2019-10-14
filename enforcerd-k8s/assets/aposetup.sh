@@ -265,7 +265,7 @@ prepare_k8s () {
   kubectl -n aporeto-operator get secrets | grep Opaque
   kubectl -n aporeto get secrets | grep Opaque
 
-  echo "> Deploy the Aporeto Operator"
+  echo "> Deploying the Aporeto Operator"
   helm install aporeto/aporeto-crds --name aporeto-crds --wait
   helm install aporeto/aporeto-operator --name aporeto-operator --namespace aporeto-operator --wait
   kubectl get pods -n aporeto-operator
