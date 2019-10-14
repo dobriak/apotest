@@ -4,7 +4,7 @@ _TODO Explain the topology of our sample app_
 
 * Deploy network policies that allow traffic from the internet to the UI, UI to frontend, frontend to backend, backend to database. Also, allow the app to communicate with DNS and etcd.
 
-`cat <<'EOF' | apoctl api import --namespace ${APOCTL_NAMESPACE}/default --url https://aporeto-inc.github.io/appblock/3tiers-app/aporeto-import.yaml`{{execute}}
+`apoctl api import --namespace ${APOCTL_NAMESPACE}/default --url https://aporeto-inc.github.io/appblock/3tiers-app/aporeto-import.yaml`{{execute}}
 
 * Deploy the sample app itself
 
